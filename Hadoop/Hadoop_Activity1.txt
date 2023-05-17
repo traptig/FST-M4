@@ -1,0 +1,36 @@
+root@174700b19783:/# vi txtFile.txt
+Night. That over years creepeth green fourth had after also seas make. Female living sea very hath. Dry good in is bring fifth under creeping all tree land.
+root@174700b19783:/# vi csvFile.csv
+
+"Sell", "List", "Living", "Rooms", "Beds", "Baths", "Age", "Acres", "Taxes"
+142, 160, 28, 10, 5, 3,  60, 0.28,  3167
+175, 180, 18,  8, 4, 1,  12, 0.43,  4033
+129, 132, 13,  6, 3, 1,  41, 0.33,  1471
+138, 140, 17,  7, 3, 1,  22, 0.46,  3204
+232, 240, 25,  8, 4, 3,   5, 2.05,  3613
+135, 140, 18,  7, 4, 3,   9, 0.57,  3028
+150, 160, 20,  8, 4, 3,  18, 4.00,  3131
+207, 225, 22,  8, 4, 2,  16, 2.22,  5158
+271, 285, 30, 10, 5, 2,  30, 0.53,  5702
+ 89,  90, 10,  5, 3, 1,  43, 0.30,  2054
+153, 157, 22,  8, 3, 3,  18, 0.38,  4127
+
+
+-rw-r--r--   1 root root   157 Nov 24 11:20 txtFile.txt
+-rw-r--r--   1 root root  1055 Nov 24 11:20 csvFile.csv
+
+root@174700b19783:/# hdfs dfs -mkdir /user/root/textData
+
+root@174700b19783:/# hdfs dfs -put ./csvFile.csv /user/root/textData
+root@174700b19783:/# hdfs dfs -put ./txtFile.txt  /user/root/textData
+
+
+
+root@174700b19783:/# hdfs dfs -ls  /user/root/textData
+Found 2 items
+-rw-r--r--   1 root supergroup       1055 2022-11-24 11:22 /user/root/textData/csvFile.csv
+-rw-r--r--   1 root supergroup        157 2022-11-24 11:24 /user/root/textData/txtFile.txt
+root@174700b19783:/# hdfs dfs -stat "type:%F permissions:%a %u:%g size:%b name:%n" /user/root/textData/csvFile.csv
+type:regular file permissions:644 root:supergroup size:1055 name:csvFile.csv
+root@174700b19783:/#  hdfs dfs -stat "type:%F permissions:%a %u:%g size:%b name:%n" /user/root/textData/txtFile.txt
+type:regular file permissions:644 root:supergroup size:157 name:txtFile.txt

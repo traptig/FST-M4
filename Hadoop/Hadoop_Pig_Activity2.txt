@@ -1,0 +1,44 @@
+
+
+root@174700b19783:/# vi file01.txt
+Hello World Bye World
+
+root@174700b19783:/# hdfs dfs -put ./file01.txt /user/root/
+root@174700b19783:/# hdfs dfs -ls  /user/root/
+Found 2 items
+-rw-r--r--   1 root supergroup         22 2022-11-24 12:43 /user/root/file01.txt
+drwxr-xr-x   - root supergroup          0 2022-11-24 10:44 /user/root/input
+root@174700b19783:/# vi wordcount.pig
+
+-- Load input file from HDFS
+inputFile = LOAD 'hdfs:///user/root/file01.txt' AS (line);
+-- Tokeize each word in the file (Map)
+words = FOREACH inputFile GENERATE FLATTEN(TOKENIZE(line)) AS word;
+-- Combine the words from the above stage
+grpd = GROUP words BY word;
+-- Count the occurence of each word (Reduce)
+cntd = FOREACH grpd GENERATE group, COUNT(words);
+-- Store the result in HDFS
+STORE cntd INTO 'hdfs:///user/root/results';
+
+root@174700b19783:/# pig wordcount.pig
+2021-09-11 12:44:27,572 INFO pig.ExecTypeProvider: Trying ExecType : LOCAL
+2021-09-11 12:44:27,577 INFO pig.ExecTypeProvider: Trying ExecType : MAPREDUCE
+2021-09-11 12:44:27,581 INFO pig.ExecTypeProvider: Picked MAPREDUCE as the ExecType
+2021-09-11 12:44:27,676 [main] INFO  org.apache.pig.Main - Apache Pig version 0.17.0 (r1797386) compiled Jun 02 2017, 15:41:58
+2021-09-11 12:44:27,676 [main] INFO  org.apache.pig.Main - Logging error messages to: //pig_1631364267666.log
+.............
+dSleep(maxRetries=10, sleepTime=1000 MILLISECONDS)
+2021-09-11 12:47:32,251 [main] INFO  org.apache.hadoop.ipc.Client - Retrying connect to server: 0.0.0.0/0.0.0.0:10020. Already tried 5 time(s); retry policy is RetryUpToMaximumCountWithFixedSleep(maxRetries=10, sleepTime=1000 MILLISECONDS)
+2021-09-11 12:47:33,253 [main] INFO  org.apache.hadoop.ipc.Client - Retrying connect to server: 0.0.0.0/0.0.0.0:10020. Already tried 6 time(s); retry policy is RetryUpToMaximumCountWithFixedSleep(maxRetries=10, sleepTime=1000 MILLISECONDS)
+2021-09-11 12:47:34,254 [main] INFO  org.apache.hadoop.ipc.Client - Retrying connect to server: 0.0.0.0/0.0.0.0:10020. Already tried 7 time(s); retry policy is RetryUpToMaximumCountWithFixedSleep(maxRetries=10, sleepTime=1000 MILLISECONDS)
+2021-09-11 12:47:35,255 [main] INFO  org.apache.hadoop.ipc.Client - Retrying connect to server: 0.0.0.0/0.0.0.0:10020. Already tried 8 time(s); retry policy is RetryUpToMaximumCountWithFixedSleep(maxRetries=10, sleepTime=1000 MILLISECONDS)
+2021-09-11 12:47:36,257 [main] INFO  org.apache.hadoop.ipc.Client - Retrying connect to server: 0.0.0.0/0.0.0.0:10020. Already tried 9 time(s); retry policy is RetryUpToMaximumCountWithFixedSleep(maxRetries=10, sleepTime=1000 MILLISECONDS)
+2021-09-11 12:47:36,359 [main] WARN  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Unable to retrieve job to compute warning aggregation.
+2021-09-11 12:47:36,359 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Success!
+2021-09-11 12:47:36,383 [main] INFO  org.apache.pig.Main - Pig script completed in 3 minutes, 8 seconds and 868 milliseconds (188868 ms)
+
+root@174700b19783:/# hdfs dfs -cat /user/root/results/part-r-00000
+Bye     1
+Hello   1
+World   2
