@@ -1,0 +1,256 @@
+
+File :episodeVI_dialouges
+
+CREATE TABLE episodeVI (name STRING,line STRING)
+row format delimited
+fields terminated by '\t'
+TBLPROPERTIES ("skip.header.line.count"="2");
+
+
+LOAD DATA LOCAL INPATH '/episodeVI_dialouges.txt' INTO TABLE episodeVI;
+
+SELECT name,count(name) AS linecnt FROM episodeVI
+GROUP BY name
+ORDER BY linecnt DESC;
+
+INSERT OVERWRITE DIRECTORY '/user/root/'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM episodeVI;
+
+INSERT OVERWRITE LOCAL DIRECTORY .
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM episodeVI;
+
+
+
+
+Moving data to directory /user/root/output
+MapReduce Jobs Launched:
+Stage-Stage-1: Map: 1   Cumulative CPU: 6.65 sec   HDFS Read: 54661 HDFS Write: 49843 SUCCESS
+Total MapReduce CPU Time Spent: 6 seconds 650 msec
+OK
+Time taken: 31.902 seconds
+hive> CREATE TABLE episodeVI (name STRING,line STRING)
+    > row format delimited
+    > fields terminated by '\t'
+    > TBLPROPERTIES ("skip.header.line.count"="2");
+OK
+Time taken: 0.312 seconds
+hive> LOAD DATA LOCAL INPATH '/episodeVI_dialouges.txt' INTO TABLE episodeVI;
+Loading data to table default.episodevi
+OK
+Time taken: 0.739 seconds
+hive> SELECT name,count(name) AS linecnt FROM episodeVI
+    > GROUP BY name
+    > ORDER BY linecnt DESC;SELECT name,count(name) AS linecnt FROM episodeVI
+    > GROUP BY name
+    > ORDER BY linecnt DESC;
+Query ID = root_20210914061234_b3ab4e8d-0f09-41b9-bbca-7e1aa9a7b7f2
+Total jobs = 2
+Launching Job 1 out of 2
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1631592067910_0013, Tracking URL = http://14680d9f87a5:8088/proxy/application_1631592067910_0013/
+Kill Command = /usr/local/hadoop/bin/mapred job  -kill job_1631592067910_0013
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2021-09-14 06:12:53,743 Stage-1 map = 0%,  reduce = 0%
+2021-09-14 06:13:04,968 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 9.41 sec
+2021-09-14 06:13:16,923 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 15.94 sec
+MapReduce Total cumulative CPU time: 15 seconds 940 msec
+Ended Job = job_1631592067910_0013
+Launching Job 2 out of 2
+Number of reduce tasks determined at compile time: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1631592067910_0014, Tracking URL = http://14680d9f87a5:8088/proxy/application_1631592067910_0014/
+Kill Command = /usr/local/hadoop/bin/mapred job  -kill job_1631592067910_0014
+Hadoop job information for Stage-2: number of mappers: 1; number of reducers: 1
+2021-09-14 06:13:41,998 Stage-2 map = 0%,  reduce = 0%
+2021-09-14 06:13:51,068 Stage-2 map = 100%,  reduce = 0%, Cumulative CPU 5.33 sec
+2021-09-14 06:14:02,986 Stage-2 map = 100%,  reduce = 100%, Cumulative CPU 13.46 sec
+MapReduce Total cumulative CPU time: 13 seconds 460 msec
+Ended Job = job_1631592067910_0014
+MapReduce Jobs Launched:
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 15.94 sec   HDFS Read: 55764 HDFS Write: 4792 SUCCESS
+Stage-Stage-2: Map: 1  Reduce: 1   Cumulative CPU: 13.46 sec   HDFS Read: 12308 HDFS Write: 4253 SUCCESS
+Total MapReduce CPU Time Spent: 29 seconds 400 msec
+OK
+HAN     104
+LUKE    100
+THREEPIO        84
+LEIA    51
+VADER   37
+LANDO   35
+EMPEROR 31
+JABBA (in Huttese subtitled)    15
+BEN     14
+ACKBAR  11
+WEDGE   10
+YODA    10
+COMMANDER       7
+PIETT   6
+JERJERROD       6
+BOUSHH  5
+BIB     5
+STORMTROOPER    5
+NINEDENINE      5
+JABBA   4
+REBEL PILOT     3
+HAN (cont)      3
+SCOUT #1        2
+GENERAL MADINE  2
+MON MOTHMA      2
+CONTROLLER (over radio) 2
+SHUTTLE CAPTAIN 2
+CONTROLLER      2
+ACKBAR (VO)     2
+GUARD   2
+BOUSHH (in Ubese subtitled)     2
+YODA (tickled, chuckles)        1
+YODA (shakes his head)  1
+YODA (gathering all his strength)       1
+Y-WING PILOT    1
+WEDGE (VO)      1
+WALKER PILOT #1 1
+VOICE (OS)      1
+VADER (turning to face him)     1
+VADER (skeptical)       1
+VADER (indicating lightsaber)   1
+VADER (bows)    1
+VADER (after a beat)    1
+VADER (a whisper)       1
+THREEPIO (to Wicket)    1
+THREEPIO (to Artoo)     1
+THREEPIO (still shaken) 1
+THREEPIO (instantly)    1
+THREEPIO (disappearing) 1
+THREEPIO (cont) 1
+STRANGE VOICE   1
+STORMTROOPER (OS)       1
+SECOND COMMANDER        1
+SCOUT #l        1
+SCOUT #2        1
+SCOUT   1
+RED TWO 1
+RED THREE       1
+RED LEADER (VO) 1
+PILOT VOICE (HAN)(filtered)     1
+PILOT #2        1
+PILOT   1
+PIETT (surprised)       1
+PIETT (into comlink)    1
+OPERATOR        1
+OOLA    1
+OFFICER 1
+NINEDENINE (to a Gamorrean guard)       1
+NAVIGATOR       1
+MON MOTHMA (cont)       1
+LURE    1
+LUKE (with sadness)     1
+LUKE (turning away, derisive)   1
+LUKE (to Leia)  1
+LUKE (shrugging it off) 1
+LUKE (sarcastic)        1
+LUKE (pointing to the controls) 1
+LUKE (moving to his ship)       1
+LUKE (indicating the one ahead) 1
+LUKE (hesitant) 1
+LUKE (groans)   1
+LUKE (cont)     1
+LUKE (concerned)        1
+LEIA (to Han)   1
+LEIA (softly)   1
+LEIA (over comlink)     1
+LEIA (into comlink)     1
+LANDO (to himself)      1
+LANDO (smiling) 1
+LANDO (over comlink)    1
+LANDO (into comlink)    1
+LANDO (desperately)     1
+JERJERROD (aghast)      1
+JABBA (cont Huttese subtitled)  1
+HAN/PILOT (VO)  1
+HAN and LUKE    1
+HAN (with self-confident grin)  1
+HAN (whispering to himself)     1
+HAN (turning to Luke)   1
+HAN (to Luke)   1
+HAN (to Leia)   1
+HAN (smiles)    1
+HAN (sighs)     1
+HAN (sarcastic) 1
+HAN (over comlink)      1
+HAN (loses his temper)  1
+HAN (looks at him warmly)       1
+HAN (grins)     1
+HAN (gravely)   1
+HAN (chuckles)  1
+HAN (blinking)  1
+HAN (angry)     1
+HAN (OS)        1
+GREEN LEADER    1
+GRAY LEADER     1
+EMPEROR (very cool)     1
+EMPEROR (to Vader)      1
+EMPEROR (to Luke)       1
+EMPEROR (no surprise)   1
+EMPEROR (laughs)        1
+EMPEROR (laughing)      1
+EMPEROR (cont)  1
+EMPEROR (angry) 1
+DEATH STAR CONTROLLER(filtered VO)      1
+CONTROLLER (filtered)   1
+CONTROL ROOM COMMANDER  1
+BUNKER COMMANDER        1
+BIB (in Huttese subtitled)      1
+BEN (grinning at Luke's indignation)    1
+BEN (continuing his narrative)  1
+BEN (attempting to give solace with his words)  1
+BEN (OS)        1
+ANAKIN (very weak)      1
+ANAKIN  1
+ACKBAR (cont)   1
+LEIA (alarmed)  1
+Time taken: 90.129 seconds, Fetched: 136 row(s)
+Query ID = root_20210914061404_55db73f2-bb80-429a-b367-461e30275830
+Total jobs = 2
+Launching Job 1 out of 2
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+
+
+
+hive> INSERT OVERWRITE DIRECTORY '/user/root/'
+    > ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+    > SELECT * FROM episodeVI;
+Query ID = root_20210914061601_797028c4-3cdd-44fa-ab36-e8552f6e0915
+Total jobs = 3
+Launching Job 1 out of 3
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_1631592067910_0017, Tracking URL = http://14680d9f87a5:8088/proxy/application_1631592067910_0017/
+Kill Command = /usr/local/hadoop/bin/mapred job  -kill job_1631592067910_0017
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 0
+2021-09-14 06:16:21,374 Stage-1 map = 0%,  reduce = 0%
+2021-09-14 06:16:32,068 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 6.85 sec
+MapReduce Total cumulative CPU time: 6 seconds 850 msec
+Ended Job = job_1631592067910_0017
+Stage-3 is selected by condition resolver.
+Stage-2 is filtered out by condition resolver.
+Stage-4 is filtered out by condition resolver.
+Moving data to directory hdfs://14680d9f87a5:9000/user/root/.hive-staging_hive_2021-09-14_06-16-01_693_4273824129105323027-1/-ext-10000
+Moving data to directory /user/root
+MapReduce Jobs Launched:
+Stage-Stage-1: Map: 1   Cumulative CPU: 6.85 sec   HDFS Read: 48307 HDFS Write: 43615 SUCCESS
+Total MapReduce CPU Time Spent: 6 seconds 850 msec
+OK
+Time taken: 32.869 seconds

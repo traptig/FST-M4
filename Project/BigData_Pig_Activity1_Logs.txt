@@ -1,0 +1,170 @@
+root@174700b19783:/# ls -lrt episode*
+-rw-r--r-- 1 root root 67671 Sep 13 03:29 episodeIV_dialouges.txt
+-rw-r--r-- 1 root root 49891 Sep 13 03:29 episodeV_dialouges.txt
+-rw-r--r-- 1 root root 43657 Sep 13 03:30 episodeVI_dialouges.txt
+root@174700b19783:/# pwd
+/
+root@174700b19783:/#
+
+root@174700b19783:/# hdfs dfs -put  episode* /user/root/
+
+root@174700b19783:/#  hdfs dfs -ls /user/root/episode*
+-rw-r--r--   1 root supergroup      67671 2021-09-13 03:32 /user/root/episodeIV_dialouges.txt
+-rw-r--r--   1 root supergroup      43657 2021-09-13 03:32 /user/root/episodeVI_dialouges.txt
+-rw-r--r--   1 root supergroup      49891 2021-09-13 03:32 /user/root/episodeV_dialouges.txt
+
+
+root@174700b19783:/# vi episodeIV_dialouges_wordcount.pig
+
+-- Load input file from HDFS
+inputFile = LOAD 'hdfs:///user/root/episodeIV_dialouges.txt' AS (line);
+-- Tokeize each word in the file (Map)
+words = FOREACH inputFile GENERATE FLATTEN(TOKENIZE(line)) AS word;
+-- Combine the words from the above stage
+grpd = GROUP words BY word;
+-- Count the occurence of each word (Reduce)
+word_count = FOREACH grpd GENERATE group AS word, COUNT(words) AS count;
+ordered_word_count = ORDER word_count BY count DESC;
+-- Store the result in HDFS
+STORE ordered_word_count INTO 'hdfs:///user/root/episodeIVoutput2';
+~                                                                                                                                                                                            ~                                                                                                                                                                                            ~                                                                   
+
+root@174700b19783:/# pig episodeIV_dialouges_wordcount.pig
+2021-09-13 04:53:09,538 INFO pig.ExecTypeProvider: Trying ExecType : LOCAL
+2021-09-13 04:53:09,541 INFO pig.ExecTypeProvider: Trying ExecType : MAPREDUCE
+2021-09-13 04:53:09,542 INFO pig.ExecTypeProvider: Picked MAPREDUCE as the ExecType
+2021-09-13 04:53:09,636 [main] INFO  org.apache.pig.Main - Apache Pig version 0.17.0 (r1797386) compiled Jun 02 2017, 15:41:58
+2021-09-13 04:53:09,636 [main] INFO  org.apache.pig.Main - Logging error messages to: //pig_1631508789626.log
+2021-09-13 04:53:10,128 [main] INFO  org.apache.pig.impl.util.Utils - Default bootup file /root/.pigbootup not found
+2021-09-13 04:53:10,230 [main] INFO  org.apache.hadoop.conf.Configuration.deprecation - mapred.job.tracker is deprecated. Instead, use mapreduce.jobtracker.address
+2021-09-13 04:53:10,230 [main] INFO  org.apache.pig.backend.hadoop.executionengine.HExecutionEngine - Connecting to hadoop file system at: hdfs://174700b19783:9000
+2021-09-13 04:53:11,354 [main] INFO  org.apache.pig.PigServer - Pig Script ID for the session: PIG-episodeIV_dialouges_wordcount.pig-4b4af3be-b5a2-4e5a-ba43-1ae81d51bddb
+2021-09-13 04:53:11,354 [main] WARN  org.apache.pig.PigServer - ATS is disabled since yarn.timeline-service.enabled set to false
+2021-09-13 04:53:12,947 [main] INFO  org.apache.pig.impl.util.SpillableMemoryManager - Selected heap (PS Old Gen) of size 699400192 to monitor. collectionUsageThreshold = 489580128, usageThreshold = 489580128
+2021-09-13 04:53:13,113 [main] WARN  org.apache.pig.newplan.BaseOperatorPlan - Encountered Warning IMPLICIT_CAST_TO_CHARARRAY 1 time(s).
+2021-09-13 04:53:13,113 [main] WARN  org.apache.pig.newplan.BaseOperatorPlan - Encountered Warning USING_OVERLOADED_FUNCTION 1 time(s).
+2021-09-13 04:53:13,125 [main] INFO  org.apache.hadoop.conf.Configuration.deprecation - mapred.textoutputformat.separator is deprecated. Instead, use mapreduce.output.textoutputformat.separator
+2021-09-13 04:53:13,167 [main] INFO  org.apache.pig.tools.pigstats.ScriptState - Pig features used in the script: GROUP_BY,ORDER_BY
+2021-09-13 04:53:13,238 [main] INFO  org.apache.pig.data.SchemaTupleBackend - Key [pig.schematuple] was not set... will not generate code.
+2021-09-13 04:53:13,327 [main] INFO  org.apache.pig.newplan.logical.optimizer.LogicalPlanOptimizer - {RULES_ENABLED=[AddForEach, ColumnMapKeyPrune, ConstantCalculator, GroupByConstParallelSetter, LimitOptimizer, LoadTypeCastInserter, MergeFilter, MergeForEach, NestedLimitOptimizer, PartitionFilterOptimizer, PredicatePushdownOptimizer, PushDownForEachFlatten, PushUpFilter, SplitFilter, StreamTypeCastInserter]}
+2021-09-13 04:53:13,582 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MRCompiler - File concatenation threshold: 100 optimistic? false
+2021-09-13 04:53:13,710 [main] INFO  org.apache.pig.backend.hadoop.executionengine.util.CombinerOptimizerUtil - Choosing to move algebraic foreach to combiner
+2021-09-13 04:53:13,770 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.SecondaryKeyOptimizerMR - Using Secondary Key Optimization for MapReduce node scope-22
+2021-09-13 04:53:13,798 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size before optimization: 3
+2021-09-13 04:53:13,799 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size after optimization: 3
+2021-09-13 04:53:14,030 [main] INFO  org.apache.hadoop.yarn.client.DefaultNoHARMFailoverProxyProvider - Connecting to ResourceManager at /0.0.0.0:8032
+2021-09-13 04:53:14,625 [main] INFO  org.apache.hadoop.conf.Configuration.deprecation - yarn.resourcemanager.system-metrics-publisher.enabled is deprecated.
+HadoopVersion   PigVersion      UserId  StartedAt       FinishedAt      Features
+3.3.1   0.17.0  root    2021-09-13 04:53:14     2021-09-13 04:59:58     GROUP_BY,ORDER_BY
+
+Success!
+
+Job Stats (time in seconds):
+JobId   Maps    Reduces MaxMapTime      MinMapTime      AvgMapTime      MedianMapTime   MaxReduceTime   MinReduceTime   AvgReduceTime   MedianReducetime        Alias   Feature Outputs
+job_1631361685155_0011  1       1       n/a     n/a     n/a     n/a     n/a     n/a     n/a     n/a     grpd,inputFile,word_count,words GROUP_BY,COMBINER
+job_1631361685155_0012  1       1       n/a     n/a     n/a     n/a     n/a     n/a     n/a     n/a     ordered_word_count      SAMPLER
+job_1631361685155_0013  1       1       n/a     n/a     n/a     n/a     n/a     n/a     n/a     n/a     ordered_word_count      ORDER_BY        hdfs:///user/root/episodeIVoutput2,
+
+Input(s):
+Successfully read 0 records from: "hdfs:///user/root/episodeIV_dialouges.txt"
+
+Output(s):
+Successfully stored 0 records in: "hdfs:///user/root/episodeIVoutput2"
+
+Counters:
+Total records written : 0
+Total bytes written : 0
+Spillable Memory Manager spill count : 0
+Total bags proactively spilled: 0
+Total records proactively spilled: 0
+
+Job DAG:
+job_1631361685155_0011  ->      job_1631361685155_0012,
+job_1631361685155_0012  ->      job_1631361685155_0013,
+job_1631361685155_0013
+
+
+2021-09-13 04:59:58,130 [main] INFO  org.apache.hadoop.yarn.client.DefaultNoHARMFailoverProxyProvider - Connecting to ResourceManager at /0.0.0.0:8032
+2021-09-13 04:59:58,157 [main] INFO  org.apache.hadoop.mapred.ClientServiceDelegate - Application state is completed. FinalApplicationStatus=SUCCEEDED. Redirecting to job history server
+2021-09-13 05:03:00,731 [main] INFO  org.apache.hadoop.ipc.Client - Retrying connect to server: 0.0.0.0/0.0.0.0:10020. Already tried 9 time(s); retry policy is RetryUpToMaximumCountWithFixedSleep(maxRetries=10, sleepTime=1000 MILLISECONDS)
+2021-09-13 05:03:00,833 [main] WARN  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Unable to retrieve job to compute warning aggregation.
+2021-09-13 05:03:00,833 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Success!
+2021-09-13 05:03:00,928 [main] INFO  org.apache.pig.Main - Pig script completed in 9 minutes, 51 seconds and 449 milliseconds (591449 ms)
+
+
+root@174700b19783:/# hdfs dfs -cat /user/root/episodeIVoutput2/part-r-00000
+LUKE    253
+HAN     152
+THREEPIO        119
+BEN     76
+LEIA    57
+LEADER  50
+RED     49
+VADER   41
+VOICE   34
+BIGGS   34
+TROOPER 29
+TARKIN  28
+OWEN    25
+GOLD    23
+OFFICER 20
+INTERCOM        16
+WEDGE   14
+STAR    9
+BERU    7
+DEATH   7
+FIVE    7
+TEN     7
+FIRST   7
+BEN'S   6
+AUNT    6
+DODONNA 6
+GREEDO  6
+JABBA   6
+HUMAN   4
+SECOND  4
+MOTTI   4
+TAGGE   4
+BARTENDER       3
+MASSASSI        3
+COMMANDER       3
+CHIEF   3
+FIXER   2
+CAMIE   2
+WARS    2
+TWO     2
+GANTRY  2
+WILLARD 2
+IMPERIAL        2
+-       1
+ASTRO-OFFICER   1
+TECHNICIAN      1
+WINGMAN'S       1
+LEADER'S        1
+CREATURE        1
+WINGMAN 1
+PORKINS 1
+EPISODE 1
+CONTROL 1
+CAPTAIN 1
+NINE'S  1
+LUKE'S  1
+ELEVEN  1
+WOMAN   1
+TEN'S   1
+SEVEN   1
+REBEL   1
+PILOT   1
+MAN'S   1
+HAN'S   1
+OVER    1
+NINE    1
+DEAK    1
+CASS    1
+BASE    1
+4:      1
+        0
+
+root@174700b19783:/# hdfs dfs -get /user/root/episodeIVoutput2/part-r-00000 .
+-rw-r--r--   1 root root   621 Sep 13 05:13 part-r-00000
+root@174700b19783:/#
